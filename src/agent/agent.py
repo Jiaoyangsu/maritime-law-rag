@@ -4,7 +4,7 @@ from src.vector_store.store import get_store
 from src.rag.retriever import MaritimeLawRetriever
 from src.rag.reranker import get_reranker
 from src.rag.generator import build_prompt, generate_answer, SYSTEM_PROMPT
-from src.agent.memory import ConversationMemory, get_memory
+from src.agent.memory import SessionMemory, get_memory
 from src.agent.tools import TOOL_FUNCTIONS, TOOL_DESCRIPTIONS
 from src.agent.planner import classify_query, decompose_complex, QueryPlan
 from src.agent.citation import extract_citations, verify_citations, has_unverified, get_unverified
@@ -25,8 +25,8 @@ MAX_REACT_CYCLES = 3
 
 
 class MaritimeLawAgent:
-    def __init__(self, memory: Optional[ConversationMemory] = None):
-        self.memory = memory or get_memory()
+    def __init__(self, session_id: Optional[str] = None):
+        self.memory = get_memory(session_id)
         self.retriever = MaritimeLawRetriever(top_k=TOP_K, rerank=RERANK_ENABLED)
         self.store = get_store()
         self.tools = TOOL_FUNCTIONS
@@ -40,6 +40,9 @@ class MaritimeLawAgent:
         self.memory.add_user(user_query)
 
         context_text = self.memory.get_context_text(last_n=2) if self.memory.is_follow_up(user_query) else ""
+        entity_ctx = self.memory.get_entity_context()
+        if entity_ctx:
+            context_text = f"{context_text}\n{entity_ctx}" if context_text else entity_ctx
         rewritten = rewrite_query(user_query, context=context_text)
         if rewritten != user_query:
             output_lines.append(format_agent_step("Rewrite", f"原始: \"{user_query}\" → 改写: \"{rewritten}\""))
@@ -52,7 +55,11 @@ class MaritimeLawAgent:
         reasoning_steps.append(f"classified as: {plan.intent}")
 
         if self.memory.is_follow_up(user_query):
-            context = self.memory.get_context_text(last_n=2)
+            lines = [self.memory.get_context_text(last_n=2)]
+            ltm = self.memory.get_ltm_context()
+            if ltm:
+                lines.append(ltm)
+            context = "\n".join(lines)
             output_lines.append(format_agent_step("Think", f"检测到追问, 引用上文: {context[:100]}"))
             reasoning_steps.append("follow-up detected, using conversation context")
 
@@ -88,7 +95,16 @@ class MaritimeLawAgent:
                 except Exception as e:
                     output_lines.append(format_agent_step("Degrade", f"Cross-Encoder 不可用 ({e}), 跳过重排序"))
 
-            answer = generate_answer(user_query, [d.page_content for d in final_context], final_sources)
+            memory_ctx = self.memory.get_ltm_context()
+            entity_ctx = self.memory.get_entity_context()
+            combined_memory = "\n".join(filter(None, [memory_ctx, entity_ctx]))
+
+            answer = generate_answer(
+                user_query,
+                [d.page_content for d in final_context],
+                final_sources,
+                memory_context=combined_memory or None,
+            )
             if answer:
                 output_lines.append(format_agent_step("Think", "LLM 生成回答完成"))
                 citations = extract_citations(answer)

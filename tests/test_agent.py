@@ -6,7 +6,7 @@ os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from src.agent.memory import ConversationMemory, get_memory
+from src.agent.memory import SessionMemory, get_memory
 from src.agent.planner import classify_query, decompose_complex
 from src.agent.tools import retrieve, get_article, compare, calculate, summarize
 from src.agent.citation import extract_citations, verify_citations
@@ -18,15 +18,17 @@ def test_memory():
     print("\n" + "=" * 60)
     print("[TEST] Conversation Memory")
     print("=" * 60)
-    mem = ConversationMemory(max_turns=3)
+    mem = SessionMemory(session_id="test_memory")
+    mem.clear()
     mem.add_user("船舶碰撞的法律规定是什么")
     mem.add_assistant("根据《海商法》第八章...")
-    assert len(mem.get_history()) == 2
+    assert len(mem.stm) == 2
     assert mem.is_follow_up("具体是怎么规定的")
     assert not mem.is_follow_up("SOLAS公约是什么")
     assert "用户" in mem.get_context_text()
     print("  Follow-up detection: OK")
     print("  History tracking: OK")
+    print("  Entities:", mem.info()["entities"])
     print("[PASS] Memory OK")
 
 
@@ -142,7 +144,7 @@ def test_multi_turn():
     assert len(r2) > 0
     print(f"  Turn 1: {len(r1)} chars")
     print(f"  Turn 2 (follow-up): {len(r2)} chars")
-    assert len(agent.memory.get_history()) >= 2
+    assert len(agent.memory.stm) >= 2
     print("[PASS] Multi-turn OK")
 
 

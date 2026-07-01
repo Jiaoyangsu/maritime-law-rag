@@ -126,8 +126,8 @@ def _eval_one(item: dict, idx: int) -> dict:
     q = item["query"]
     expected = item["expected_sources"]
 
-    get_memory().clear()
-    agent = MaritimeLawAgent()
+    agent = MaritimeLawAgent(session_id=f"eval_{idx}")
+    get_memory(f"eval_{idx}").clear()
 
     t0 = time.time()
     try:

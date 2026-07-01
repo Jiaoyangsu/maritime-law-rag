@@ -10,6 +10,9 @@ data/raw/
 data/processed/chroma_db/
 data/processed/parent_child_store.pkl
 
+# Session memory (auto-generated during runtime)
+data/processed/sessions/
+
 # Environment
 .env
 .venv/

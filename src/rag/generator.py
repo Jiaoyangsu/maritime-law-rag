@@ -44,14 +44,19 @@ def _build_llm():
     return None
 
 
-def build_prompt(query: str, context_chunks: List[str], sources: Optional[List[str]] = None) -> str:
+def build_prompt(query: str, context_chunks: List[str], sources: Optional[List[str]] = None,
+                 memory_context: Optional[str] = None) -> str:
     context = "\n\n---\n\n".join(
         f"[来源: {src or '未知'}]\n{chunk}" if src else chunk
         for chunk, src in zip(context_chunks, sources or [None] * len(context_chunks))
     )
+    memory_section = ""
+    if memory_context:
+        memory_section = f"\n\n历史对话上下文（供参考）：\n{memory_context}\n"
+
     return f"""参考法条：
 {context}
-
+{memory_section}
 ---
 用户问题：{query}
 
@@ -62,12 +67,13 @@ def generate_answer(
     query: str,
     context_chunks: List[str],
     sources: Optional[List[str]] = None,
+    memory_context: Optional[str] = None,
 ) -> Optional[str]:
     llm = _build_llm()
     if llm is None:
         return None
 
-    prompt = build_prompt(query, context_chunks, sources)
+    prompt = build_prompt(query, context_chunks, sources, memory_context)
     from langchain.schema import SystemMessage, HumanMessage
     messages = [
         SystemMessage(content=SYSTEM_PROMPT),
