@@ -1,0 +1,658 @@
+{
+  "n_queries": 32,
+  "pass_rate": 96.9,
+  "avg_latency": 15.32,
+  "degrade_count": 0,
+  "avg_quality": {
+    "relevancy": 4.16,
+    "accuracy": 3.88,
+    "completeness": 3.53
+  },
+  "results": [
+    {
+      "idx": 1,
+      "query": "船舶碰撞的归责原则是什么",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 7.84,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 4,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 4,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，准确阐述了船舶碰撞的过错责任原则及三种情形，覆盖全面。但法条引用中第一百七十六条、一百七十七条、一百七十八条的编号与《海商法》实际章节不完全匹配（实际为第一百六十五条至第一百六十九条），存在轻微准确性瑕疵。"
+      }
+    },
+    {
+      "idx": 2,
+      "query": "海难救助的报酬如何确定",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 10.38,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 4,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，准确引用了《中华人民共和国海商法》相关法条，并全面覆盖了海难救助报酬确定的原则、考量因素和补充说明，无遗漏。"
+      }
+    },
+    {
+      "idx": 3,
+      "query": "船舶所有人责任限制的具体规定",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 13.86,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 13,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 4,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，全面覆盖了一般海事赔偿责任限制和油污损害责任限制的具体规定，但人身伤亡赔偿限额数字存在误差（应为333,000计算单位而非500,000），准确性略有扣分。"
+      }
+    },
+    {
+      "idx": 4,
+      "query": "共同海损的构成要件",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 9.61,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 1,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，准确引用了《海商法》第二百零二条，完整列出了共同海损的四个构成要件，并补充了排除情形，覆盖全面且专业。"
+      }
+    },
+    {
+      "idx": 5,
+      "query": "海事诉讼时效是多少年",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 10.86,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 6,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 2,
+        "completeness": 3,
+        "reason": "回答直接针对用户问题，涵盖了多种海事请求的诉讼时效，但引用的海商法条款编号错误（如将第261条等误写为第288条等），准确性严重不足。完整性较好但受准确性影响。"
+      }
+    },
+    {
+      "idx": 6,
+      "query": "船舶优先权的受偿顺序",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 11.01,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 5,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，准确引用了《海商法》相关法条并详细解释了受偿顺序，内容全面且无遗漏。"
+      }
+    },
+    {
+      "idx": 7,
+      "query": "海上旅客运输合同承运人的责任",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 45.16,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 9,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 4,
+        "completeness": 4,
+        "reason": "回答直接针对用户问题，准确引用了《海商法》相关法条（如第109条、第108条、第285条），覆盖了运输期间、法定义务、无效条款、时效等关键方面。但部分内容（如承运人法定义务的类推适用、免责情形）因法条缺失而略显不完整，且未明确提及责任限额的具体数值，因此扣1分。整体质量良好。"
+      }
+    },
+    {
+      "idx": 8,
+      "query": "光船租赁合同下承租人的义务",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 42.16,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 10,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 4,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，覆盖光船租赁合同下承租人的主要义务，引用海商法具体条款，但第3点中关于赔偿义务的法条依据（第一百五十八条第一款）可能与实际条款不完全对应，存在轻微不准确，其他方面均良好。"
+      }
+    },
+    {
+      "idx": 9,
+      "query": "海上保险合同中被保险人的告知义务",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 14.09,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 6,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 4,
+        "completeness": 3,
+        "reason": "回答直接针对用户问题，相关性高；引用《海商法》具体条款准确，但未涉及一般性告知义务；完整性方面覆盖了多种特定情形，但缺少对整体法律框架的深入讨论。"
+      }
+    },
+    {
+      "idx": 10,
+      "query": "海上交通安全法对船舶安全航行的要求",
+      "expected": [
+        "海上交通安全法"
+      ],
+      "latency": 28.33,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 6,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 4,
+        "accuracy": 3,
+        "completeness": 3,
+        "reason": "回答直接针对用户问题，但部分关键法条缺失（如航行一般规则、避碰等），引用中《船舶安全监督管理规则》未验证通过，准确性有扣分；覆盖了程序性要求但未完整触及核心实质性条款，完整性一般。"
+      }
+    },
+    {
+      "idx": 11,
+      "query": "海上交通事故的报告义务",
+      "expected": [
+        "海上交通安全法"
+      ],
+      "latency": 8.62,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 3,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 4,
+        "reason": "回答直接针对用户问题，准确引用了《海上交通安全法》相关条款，覆盖了一般报告义务和管辖海域外的报告义务，但未详细说明报告的具体内容或时限，完整性略有不足。"
+      }
+    },
+    {
+      "idx": 12,
+      "query": "海洋环境保护法对船舶排放的规定",
+      "expected": [
+        "海洋环境保护法"
+      ],
+      "latency": 12.78,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 4,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 2,
+        "accuracy": 3,
+        "completeness": 2,
+        "reason": "回答部分相关，但未能直接提供用户所需的船舶排放具体规定，而是主要讨论了监管职责；法律引用基本准确，但未覆盖关键法条；完整性不足，缺少对船舶排放核心条款的说明。"
+      }
+    },
+    {
+      "idx": 13,
+      "query": "船舶未持有防污证书的法律责任",
+      "expected": [
+        "海洋环境保护法",
+        "防治船舶污染海洋环境管理条例"
+      ],
+      "latency": 15.08,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 6,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 4,
+        "accuracy": 5,
+        "completeness": 4,
+        "reason": "回答直接针对用户问题，引用了准确的法条和罚款标准，核心内容完整。但回答中包含了内部思考过程等无关文本，影响了相关性的评分，且未提及民事责任或具体执法部门等细节，完整性略有不足。"
+      }
+    },
+    {
+      "idx": 14,
+      "query": "船舶登记的条件和程序",
+      "expected": [
+        "船舶登记条例"
+      ],
+      "latency": 33.85,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 8,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，准确引用了《船舶登记条例》和《海上交通安全法》的相关条款，完整覆盖了船舶登记的条件、所有权登记程序、国籍登记程序及其他相关要求，内容全面且专业。"
+      }
+    },
+    {
+      "idx": 15,
+      "query": "船员任职需要什么证书",
+      "expected": [
+        "船员条例"
+      ],
+      "latency": 10.5,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 1,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，准确引用了《中华人民共和国船员条例》的具体条款，并全面覆盖了船员适任证书、海员证及外国籍船员的特别要求，内容完整且专业。"
+      }
+    },
+    {
+      "idx": 16,
+      "query": "船员的劳动合同权益",
+      "expected": [
+        "船员条例"
+      ],
+      "latency": 17.94,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 15,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 4,
+        "completeness": 4,
+        "reason": "回答直接针对船员劳动合同权益，引用法条准确（虽有轻微混淆），覆盖工资、休假、遣返等主要方面，但未包含社会保险等次要权益，完整性略有不足。"
+      }
+    },
+    {
+      "idx": 17,
+      "query": "船舶吨税的计税依据",
+      "expected": [
+        "船舶吨税法"
+      ],
+      "latency": 6.34,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 3,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 2,
+        "accuracy": 2,
+        "completeness": 1,
+        "reason": "回答未能直接提供船舶吨税的计税依据，而是说明无法完整回答，并引用了不相关的《海商法》船舶优先权条款，准确性有误，完整性严重不足。"
+      }
+    },
+    {
+      "idx": 18,
+      "query": "国际海运无船承运业务的经营条件",
+      "expected": [
+        "国际海运条例"
+      ],
+      "latency": 8.54,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 1,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 3,
+        "reason": "回答直接针对用户问题，引用了准确的《国际海运条例》第七条，但仅提及了提单登记这一核心条件，未完整覆盖其他可能的经营条件（如备案、保证金等），完整性有所欠缺。"
+      }
+    },
+    {
+      "idx": 19,
+      "query": "港口法的基本原则",
+      "expected": [
+        "港口法"
+      ],
+      "latency": 15.25,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 5,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 4,
+        "reason": "回答直接针对用户问题，准确引用了《港口法》相关条款，覆盖了依法管理、统一管理、规划先行、促进投资、安全第一、公共利益优先等主要原则，但可能遗漏了可持续发展等原则，整体较为完整。"
+      }
+    },
+    {
+      "idx": 20,
+      "query": "内河交通安全的管理要求",
+      "expected": [
+        "内河交通安全管理条例"
+      ],
+      "latency": 11.43,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 5,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，引用《内河交通安全管理条例》具体条款，准确无误；全面覆盖船舶、船员、航行、危险货物、渡口、通航保障、救助等关键方面，完整度高。"
+      }
+    },
+    {
+      "idx": 21,
+      "query": "防治船舶污染的措施和法律责任",
+      "expected": [
+        "防治船舶污染海洋环境管理条例"
+      ],
+      "latency": 29.75,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 27,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 4,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，全面覆盖了防治船舶污染的措施和法律责任，引用了《防治船舶污染海洋环境管理条例》和《海洋环境保护法》的具体条款，准确性高。但部分条款引用（如《海洋环境保护法》第八十九条）因参考法条未提供完整内容而略显模糊，轻微影响准确性评分。"
+      }
+    },
+    {
+      "idx": 22,
+      "query": "SOLAS公约对船舶救生设备的要求",
+      "expected": [
+        "IMO Convention - SOLAS 详细"
+      ],
+      "latency": 12.44,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 3,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 3,
+        "accuracy": 4,
+        "completeness": 2,
+        "reason": "回答部分相关，但未直接提供SOLAS公约对船舶救生设备的具体要求，而是指出无法完整回答并建议查阅其他资料；国内法引用准确，但对用户核心问题覆盖不足。"
+      }
+    },
+    {
+      "idx": 23,
+      "query": "MARPOL公约对油类排放的限制",
+      "expected": [
+        "IMO Convention - MARPOL 详细"
+      ],
+      "latency": 24.65,
+      "pass": false,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 0.0,
+      "n_citations": 6,
+      "missing_sources": [
+        "IMO Convention - MARPOL 详细"
+      ],
+      "quality": {
+        "relevancy": 2,
+        "accuracy": 3,
+        "completeness": 2,
+        "reason": "回答未能直接针对MARPOL公约的具体油类排放限制，转而提供国内法内容，且承认无法完整回答，导致相关性和完整性不足；但所引用的国内法条文准确，准确性尚可。"
+      }
+    },
+    {
+      "idx": 24,
+      "query": "STCW公约对船员值班标准的规定",
+      "expected": [
+        "IMO Convention - STCW 详细"
+      ],
+      "latency": 9.19,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 8,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 3,
+        "accuracy": 3,
+        "completeness": 2,
+        "reason": "回答部分相关，但未能直接提供STCW公约的具体规定，而是转向国内法，且引用验证失败，准确性和完整性不足。"
+      }
+    },
+    {
+      "idx": 25,
+      "query": "ISM Code对船舶安全管理体系的要求",
+      "expected": [
+        "ISM Code (国际安全管理规则)"
+      ],
+      "latency": 15.86,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 5,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 4,
+        "completeness": 3,
+        "reason": "回答直接针对用户问题，引用相关法条，但准确性上对SOLAS章节引用不够精确，完整性上缺少对SMS具体要素的详细说明，如指定人员、内部审核等。"
+      }
+    },
+    {
+      "idx": 26,
+      "query": "MLC 2006对船员工作条件的规定",
+      "expected": [
+        "MLC 2006 (海事劳工公约)"
+      ],
+      "latency": 16.69,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 7,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 2,
+        "accuracy": 3,
+        "completeness": 2,
+        "reason": "回答未直接引用MLC 2006条款，而是提供中国《船员条例》内容，偏离用户对公约本身规定的需求；引用国内法准确但未回应核心问题；完整性不足，未覆盖MLC 2006关键方面如休息时间、遣返等。"
+      }
+    },
+    {
+      "idx": 27,
+      "query": "比较海商法和SOLAS对船舶安全的规定",
+      "expected": [
+        "海商法",
+        "IMO Convention - SOLAS 详细"
+      ],
+      "latency": 3.09,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 2,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 2,
+        "accuracy": 2,
+        "completeness": 1,
+        "reason": "回答未直接进行比较，仅列举不相关的段落，海商法引用与安全规定无关，SOLAS部分混入其他公约，未覆盖关键安全条款，严重遗漏。"
+      }
+    },
+    {
+      "idx": 28,
+      "query": "海商法第一百七十五条",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 3.4,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 2,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 2,
+        "accuracy": 3,
+        "completeness": 2,
+        "reason": "回答虽然包含了海商法第一百七十五条的内容，但混杂了大量其他无关法条，没有聚焦于用户查询的条款，结构混乱，导致相关性和完整性不足。"
+      }
+    },
+    {
+      "idx": 29,
+      "query": "船员条例关于船员培训的要求",
+      "expected": [
+        "船员条例"
+      ],
+      "latency": 11.02,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 4,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，准确引用了《船员条例》的相关条款（第三十一、三十二、五十六、五十七条），并全面覆盖了船员培训的义务、培训机构条件与许可、违规处罚等关键方面，内容完整且结构清晰。"
+      }
+    },
+    {
+      "idx": 30,
+      "query": "5000总吨船舶人身伤亡赔偿限额",
+      "expected": [
+        "海商法"
+      ],
+      "latency": 1.47,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 1,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 3,
+        "accuracy": 1,
+        "completeness": 1,
+        "reason": "回答直接针对问题但提供的限额数值严重错误（应为约4,400,000 SDR而非384,100,000 SDR），且未引用具体法条或计算过程，不完整。"
+      }
+    },
+    {
+      "idx": 31,
+      "query": "港口法对港口经营人的资质要求",
+      "expected": [
+        "港口法"
+      ],
+      "latency": 8.99,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 3,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 5,
+        "accuracy": 5,
+        "completeness": 5,
+        "reason": "回答直接针对用户问题，准确引用了《港口法》第十五条和第十六条，完整覆盖了经营许可和具体资质条件两个关键方面，没有遗漏。"
+      }
+    },
+    {
+      "idx": 32,
+      "query": "MARPOL和海洋环境保护法对油污赔偿的规定",
+      "expected": [
+        "IMO Convention - MARPOL 详细",
+        "海洋环境保护法"
+      ],
+      "latency": 19.96,
+      "pass": true,
+      "has_error": false,
+      "has_degrade": false,
+      "source_recall": 1.0,
+      "n_citations": 19,
+      "missing_sources": [],
+      "quality": {
+        "relevancy": 4,
+        "accuracy": 3,
+        "completeness": 3,
+        "reason": "回答直接针对用户问题，但MARPOL部分因检索结果缺失未能覆盖，仅对《海洋环境保护法》进行了说明，准确性上部分引用（如MARPOL及其他法规）未在检索结果中找到对应条款，存在风险；完整性上未能全面覆盖MARPOL的规定，有所遗漏。"
+      }
+    }
+  ]
+}

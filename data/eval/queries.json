@@ -1,0 +1,37 @@
+[
+  {"query": "船舶碰撞的归责原则是什么", "expected_sources": ["海商法"], "type": "retrieve"},
+  {"query": "海难救助的报酬如何确定", "expected_sources": ["海商法"], "type": "retrieve"},
+  {"query": "船舶所有人责任限制的具体规定", "expected_sources": ["海商法"], "type": "retrieve"},
+  {"query": "共同海损的构成要件", "expected_sources": ["海商法"], "type": "retrieve"},
+  {"query": "海事诉讼时效是多少年", "expected_sources": ["海商法"], "type": "retrieve"},
+  {"query": "船舶优先权的受偿顺序", "expected_sources": ["海商法"], "type": "retrieve"},
+  {"query": "海上旅客运输合同承运人的责任", "expected_sources": ["海商法"], "type": "retrieve"},
+  {"query": "光船租赁合同下承租人的义务", "expected_sources": ["海商法"], "type": "retrieve"},
+  {"query": "海上保险合同中被保险人的告知义务", "expected_sources": ["海商法"], "type": "retrieve"},
+
+  {"query": "海上交通安全法对船舶安全航行的要求", "expected_sources": ["海上交通安全法"], "type": "retrieve"},
+  {"query": "海上交通事故的报告义务", "expected_sources": ["海上交通安全法"], "type": "retrieve"},
+  {"query": "海洋环境保护法对船舶排放的规定", "expected_sources": ["海洋环境保护法"], "type": "retrieve"},
+  {"query": "船舶未持有防污证书的法律责任", "expected_sources": ["海洋环境保护法", "防治船舶污染海洋环境管理条例"], "type": "retrieve"},
+  {"query": "船舶登记的条件和程序", "expected_sources": ["船舶登记条例"], "type": "retrieve"},
+  {"query": "船员任职需要什么证书", "expected_sources": ["船员条例"], "type": "retrieve"},
+  {"query": "船员的劳动合同权益", "expected_sources": ["船员条例"], "type": "retrieve"},
+  {"query": "船舶吨税的计税依据", "expected_sources": ["船舶吨税法"], "type": "retrieve"},
+  {"query": "国际海运无船承运业务的经营条件", "expected_sources": ["国际海运条例"], "type": "retrieve"},
+  {"query": "港口法的基本原则", "expected_sources": ["港口法"], "type": "retrieve"},
+  {"query": "内河交通安全的管理要求", "expected_sources": ["内河交通安全管理条例"], "type": "retrieve"},
+  {"query": "防治船舶污染的措施和法律责任", "expected_sources": ["防治船舶污染海洋环境管理条例"], "type": "retrieve"},
+
+  {"query": "SOLAS公约对船舶救生设备的要求", "expected_sources": ["IMO Convention - SOLAS 详细"], "type": "retrieve"},
+  {"query": "MARPOL公约对油类排放的限制", "expected_sources": ["IMO Convention - MARPOL 详细"], "type": "retrieve"},
+  {"query": "STCW公约对船员值班标准的规定", "expected_sources": ["IMO Convention - STCW 详细"], "type": "retrieve"},
+  {"query": "ISM Code对船舶安全管理体系的要求", "expected_sources": ["ISM Code (国际安全管理规则)"], "type": "retrieve"},
+  {"query": "MLC 2006对船员工作条件的规定", "expected_sources": ["MLC 2006 (海事劳工公约)"], "type": "retrieve"},
+
+  {"query": "比较海商法和SOLAS对船舶安全的规定", "expected_sources": ["海商法", "IMO Convention - SOLAS 详细"], "type": "compare"},
+  {"query": "海商法第一百七十五条", "expected_sources": ["海商法"], "type": "article"},
+  {"query": "船员条例关于船员培训的要求", "expected_sources": ["船员条例"], "type": "retrieve"},
+  {"query": "5000总吨船舶人身伤亡赔偿限额", "expected_sources": ["海商法"], "type": "calculate"},
+  {"query": "港口法对港口经营人的资质要求", "expected_sources": ["港口法"], "type": "retrieve"},
+  {"query": "MARPOL和海洋环境保护法对油污赔偿的规定", "expected_sources": ["IMO Convention - MARPOL 详细", "海洋环境保护法"], "type": "compare"}
+]
