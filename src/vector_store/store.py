@@ -69,7 +69,21 @@ def _build_synonym_expansions(query: str) -> List[str]:
 
 
 def _get_embedding_fn():
-    from src.config import EMBEDDING_PROVIDER, EMBEDDING_MODEL, HF_ENDPOINT
+    from src.config import (
+        EMBEDDING_PROVIDER, EMBEDDING_MODEL, EMBEDDING_DIMENSIONS,
+        HF_ENDPOINT, OPENAI_API_KEY, OPENAI_BASE_URL,
+    )
+    if EMBEDDING_PROVIDER == "openai":
+        try:
+            from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+            return OpenAIEmbeddingFunction(
+                api_key=OPENAI_API_KEY,
+                model_name=EMBEDDING_MODEL,
+                api_base=OPENAI_BASE_URL or "https://api.openai.com/v1",
+                dimensions=EMBEDDING_DIMENSIONS,
+            )
+        except Exception as e:
+            print(f"[store] OpenAI embedding failed ({e}), falling back")
     if EMBEDDING_PROVIDER == "sentence_transformer":
         try:
             import os
@@ -82,7 +96,7 @@ def _get_embedding_fn():
 
 
 class HybridVectorStore:
-    def __init__(self, collection_name: str = COLLECTION_NAME):
+    def __init__(self, collection_name: str = COLLECTION_NAME, reset_collection: bool = False):
         self.parents: Dict[int, Document] = {}
         self.children: List[Document] = []
         self._child_to_parent: List[int] = []
@@ -91,6 +105,11 @@ class HybridVectorStore:
 
         chroma_client = chromadb.PersistentClient(path=str(CHROMA_DIR))
         embedding_fn = _get_embedding_fn()
+        if reset_collection:
+            try:
+                chroma_client.delete_collection(collection_name)
+            except ValueError:
+                pass
         self.collection = chroma_client.get_or_create_collection(
             name=collection_name,
             embedding_function=embedding_fn,
@@ -270,43 +289,129 @@ class HybridVectorStore:
         if has_chinese:
             ngram_results = self._ngram_search(query, k=k * 3)
             bm25_results = self._bm25_search(query, k=k * 3)
+            dense_results = self._dense_search(query, k=k * 3)
 
-            bm25_weight, ngram_weight = 0.6, 0.4
+            query_has_latin = bool(re.search(r"[a-zA-Z]{2,}", query))
+            query_mentions_convention = bool(re.search(r"(公约|IMO)", query))
+            query_mention_broad = bool(re.search(r"(我国加入|所有的|国际海事)", query))
 
-            if not bm25_results and not ngram_results:
-                return []
+            if query_mentions_convention or query_has_latin:
+                bm25_weight, ngram_weight, dense_weight = 0.15, 0.10, 0.75
+            elif query_mention_broad:
+                bm25_weight, ngram_weight, dense_weight = 0.10, 0.05, 0.85
+            else:
+                bm25_weight, ngram_weight, dense_weight = 0.25, 0.15, 0.60
+
             if not bm25_results:
-                return ngram_results[:k]
+                bm25_weight = 0.0
             if not ngram_results:
-                return bm25_results[:k]
+                ngram_weight = 0.0
+            if not dense_results:
+                dense_weight = 0.0
+
+            total_w = bm25_weight + ngram_weight + dense_weight
+            if total_w == 0:
+                return self._retry_with_synonyms(query, k)
+            if total_w > 0:
+                bm25_weight /= total_w
+                ngram_weight /= total_w
+                dense_weight /= total_w
 
             bm25_by_pid = {doc.metadata["parent_id"]: (doc, score) for doc, score in bm25_results}
             ngram_by_pid = {doc.metadata["parent_id"]: (doc, score) for doc, score in ngram_results}
+            dense_by_pid = {doc.metadata["parent_id"]: (doc, score) for doc, score in dense_results}
 
-            all_pids = set(bm25_by_pid.keys()) | set(ngram_by_pid.keys())
+            all_pids = set(bm25_by_pid.keys()) | set(ngram_by_pid.keys()) | set(dense_by_pid.keys())
+
             rrf_scores: List[Tuple[Document, float]] = []
             for pid in all_pids:
-                doc = bm25_by_pid.get(pid, ngram_by_pid.get(pid))[0]
-                bm25_rank = next(
-                    (r for r, (d, _) in enumerate(bm25_results) if d.metadata["parent_id"] == pid),
-                    None,
-                )
-                ngram_rank = next(
-                    (r for r, (d, _) in enumerate(ngram_results) if d.metadata["parent_id"] == pid),
-                    None,
-                )
+                doc = (
+                    bm25_by_pid.get(pid)
+                    or ngram_by_pid.get(pid)
+                    or dense_by_pid.get(pid)
+                )[0]
                 score = 0.0
-                if bm25_rank is not None:
-                    score += bm25_weight / (RRF_K + bm25_rank + 1)
-                if ngram_rank is not None:
-                    score += ngram_weight / (RRF_K + ngram_rank + 1)
+
+                if bm25_weight > 0:
+                    bm25_rank = next(
+                        (r for r, (d, _) in enumerate(bm25_results) if d.metadata["parent_id"] == pid),
+                        None,
+                    )
+                    if bm25_rank is not None:
+                        score += bm25_weight / (RRF_K + bm25_rank + 1)
+
+                if ngram_weight > 0:
+                    ngram_rank = next(
+                        (r for r, (d, _) in enumerate(ngram_results) if d.metadata["parent_id"] == pid),
+                        None,
+                    )
+                    if ngram_rank is not None:
+                        score += ngram_weight / (RRF_K + ngram_rank + 1)
+
+                if dense_weight > 0:
+                    dense_rank = next(
+                        (r for r, (d, _) in enumerate(dense_results) if d.metadata["parent_id"] == pid),
+                        None,
+                    )
+                    if dense_rank is not None:
+                        score += dense_weight / (RRF_K + dense_rank + 1)
+
                 rrf_scores.append((doc, score))
+
+            query_tokens = re.findall(r"[a-zA-Z0-9]{2,}", query)
+            cn_chars = re.sub(r"[^\u4e00-\u9fff]", "", query)
+            for i in range(len(cn_chars)):
+                for j in range(2, min(5, len(cn_chars) - i + 1)):
+                    t = cn_chars[i:i+j]
+                    if len(t) >= 2:
+                        query_tokens.append(t)
+
+            if query_tokens:
+                for i, (doc, score) in enumerate(rrf_scores):
+                    src = doc.metadata.get("source", "")
+                    ngram_bonus = sum(
+                        0.005 for t in query_tokens if len(t) >= 2 and t in src
+                    )
+                    if src in query:
+                        bonus = 0.03
+                    else:
+                        bonus = min(ngram_bonus, 0.01)
+                    if bonus:
+                        rrf_scores[i] = (doc, score + bonus)
+
             rrf_scores.sort(key=lambda x: x[1], reverse=True)
             if not rrf_scores:
                 result = self._bm25_search(query, k=k)
                 if result:
                     return result
                 return self._retry_with_synonyms(query, k)
+
+            if query_mention_broad and k >= 5:
+                convention_sources = [
+                    "IMO Convention - SOLAS", "IMO Convention - MARPOL",
+                    "IMO Convention - STCW", "ISM Code", "MLC 2006",
+                ]
+                current_sources = {doc.metadata.get("source", "") for doc, _ in rrf_scores[:k]}
+                missing = [s for s in convention_sources if not any(s in c for c in current_sources)]
+                if missing:
+                    for cs in missing:
+                        extra = self._dense_search(f"国际海事公约 {cs}", k=1)
+                        if extra:
+                            rrf_scores.append(extra[0])
+                    rrf_scores.sort(key=lambda x: x[1], reverse=True)
+
+            latin_terms = re.findall(r"[A-Z]{2,}", query)
+            if latin_terms:
+                current_src = {doc.metadata.get("source", "") for doc, _ in rrf_scores[:k]}
+                missing = [t for t in latin_terms if not any(t in s for s in current_src)]
+                for term in missing:
+                    extra = self._dense_search(f"{term} 公约条款", k=2)
+                    for d, s in extra:
+                        if term in d.metadata.get("source", ""):
+                            rrf_scores.append((d, s * 0.8))
+                if missing:
+                    rrf_scores.sort(key=lambda x: x[1], reverse=True)
+
             return rrf_scores[:k]
 
         dense_results = self._dense_search(query, k=k * 3)
@@ -429,7 +534,7 @@ def get_store():
 
 
 def build_store(parent_chunks: List[dict], child_chunks: List[dict]) -> HybridVectorStore:
-    store = HybridVectorStore()
+    store = HybridVectorStore(reset_collection=True)
     store.add_documents(parent_chunks, child_chunks)
     store.save()
     stats = store.get_index_stats()
