@@ -66,14 +66,33 @@ PYTHONPATH=. python scripts/run_agent.py
 ## 检索架构
 
 ### 混合检索 (Hybrid Search)
-- **BM25 (稀疏检索)**: 基于词频的统计检索，对中文法律术语效果好
-- **TF-IDF + Cosine Similarity**: 基于字符 n-gram 的向量检索
-- **融合策略**: 加权融合 BM25 + TF-IDF 分数 (默认 alpha=0.5)
 
-### 交互式命令
-- `quit/exit` - 退出
-- `context` - 切换显示检索详情
-- `hybrid` - 切换混合/纯BM25检索
+三路 RRF (Reciprocal Rank Fusion) 融合，按查询类型动态加权：
+
+| 查询类型 | BM25 | N-gram | Dense | 场景 |
+|---------|------|--------|-------|------|
+| LATIN (SOLAS/MARPOL等) | 0.15 | 0.10 | 0.75 | 英文缩写 + 中文上下文 |
+| BROAD (我国加入/国际海事) | 0.10 | 0.05 | 0.85 | 全量公约查询 |
+| PLAIN Chinese | 0.25 | 0.15 | 0.60 | 纯中文法律查询 |
+
+- **BM25**: 基于词频的关键词检索，对中文法律术语精确匹配
+- **N-gram (TF-IDF)**: 基于字符 n-gram 的相似度，捕获字面重叠
+- **Dense (text-embedding-3-small)**: 1536 维稠密向量语义检索，跨语言匹配
+- **Fallback**: Convention/Latin 查询自动 dense 降级补全缺失公约
+- **Source Boost**: 查询中显式提及的法源名，RRF 分数 +0.03
+
+### 评估结果 (124 条中文查询, Recall@5)
+| 方法 | Hit@1 | Hit@3 | Hit@5 | Hit@10 |
+|------|-------|-------|-------|--------|
+| **Hybrid** | **91.1%** | **96.0%** | **98.4%** | **100%** |
+| Dense only | 77.4% | 90.3% | 96.0% | 96.8% |
+| BM25 only | 79.8% | 89.5% | 92.7% | 94.4% |
+| N-gram only | 75.8% | 82.3% | 87.9% | 92.7% |
+
+### Reranker
+- Cross-encoder: `BAAI/bge-reranker-v2-m3` (精排 top-3)
+- Fallback: 基于 jieba 分词 + n-gram 的本地中文重排序
+- 支持 OpenAI API embedding 兜底重排
 
 ## 项目结构
 
@@ -81,21 +100,18 @@ PYTHONPATH=. python scripts/run_agent.py
 maritime-law-rag/
 ├── data/
 │   ├── raw/           # 原始法律文本
-│   └── processed/     # 向量索引文件
+│   ├── processed/     # ChromaDB + BM25 索引
+│   └── eval/          # 评估数据集
 ├── src/
 │   ├── data_collection/   # 数据采集
 │   ├── document_processing/  # 分块 & 向量化
-│   ├── vector_store/      # BM25 + TF-IDF 混合存储
-│   ├── rag/               # 检索引擎 & 生成引擎
+│   ├── vector_store/      # BM25 + N-gram + Dense 混合存储
+│   ├── rag/               # 检索引擎 & 重排序 & 生成
 │   └── cli/               # 交互式命令行
 ├── scripts/
 │   ├── build_knowledge_base.py # 构建知识库
-│   └── run_agent.py            # 启动问答
-└── .env                 # 配置文件
+│   ├── run_agent.py            # 启动问答
+│   ├── eval_retrieval.py       # Recall/MRR 评估
+│   └── eval_hitk.py            # Hit@K 评估
+└── tests/               # 测试
 ```
-
-## 后续计划
-- [ ] 添加多语言 Dense Embedding (paraphrase-multilingual-MiniLM-L12-v2) 提升语义检索
-- [ ] 添加 Cross-encoder Reranker (bge-reranker) 精排
-- [ ] 集成 ChromaDB 持久化向量存储
-- [ ] 支持 PDF/扫描件 OCR
