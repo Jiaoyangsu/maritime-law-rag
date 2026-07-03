@@ -35,3 +35,5 @@ class MaritimeLawRetriever:
     def retrieve_texts(self, query: str) -> List[str]:
         results = self.retrieve(query)
         return [doc.page_content for doc, _ in results]
+        results = self.retrieve(query)
+        return [doc.page_content for doc, _ in results]

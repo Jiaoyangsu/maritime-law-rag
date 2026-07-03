@@ -28,7 +28,8 @@ def main():
     for s in stats['sources']:
         print(f"    - {s}")
     print(f"  Retrieval: ChromaDB HNSW (child-level) + BM25 (child-level) -> RRF -> map to parent")
-    print(f"  Reranker: cross-encoder/ms-marco-MiniLM-L-6-v2")
+    print(f"  Embedding: {os.getenv('EMBEDDING_MODEL', 'text-embedding-3-small')} via {os.getenv('EMBEDDING_PROVIDER', 'openai')}")
+    print(f"  Reranker: {os.getenv('CROSS_ENCODER_MODEL', 'BAAI/bge-reranker-v2-m3')} (skip for Chinese if not cached)")
     print("Ready for Q&A!")
     print("\nTest commands:")
     print("  PYTHONPATH=. python scripts/run_agent.py")

@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict, Any, Set
 from langchain.schema import Document
 from src.config import TOP_K
 
@@ -67,3 +67,24 @@ def format_agent_step(step: str, detail: str = "") -> str:
 
 def format_disclaimer() -> str:
     return "\n[免责声明] 以上信息仅供参考，不构成法律意见。具体法律适用请咨询专业律师。"
+
+
+def format_source_refs(docs: List[Document]) -> str:
+    refs = []
+    seen: Set[str] = set()
+    for doc in docs:
+        src = doc.metadata.get("source", "unknown")
+        pid = doc.metadata.get("parent_id", "")
+        key = f"{src}:{pid}"
+        if key not in seen:
+            seen.add(key)
+            refs.append((src, pid))
+    if not refs:
+        return ""
+    lines = ["\n[参考来源]"]
+    for src, pid in refs:
+        label = f"《{src}》"
+        if pid:
+            label += f" (段落 {pid})"
+        lines.append(f"  • {label}")
+    return "\n".join(lines)

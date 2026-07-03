@@ -17,6 +17,7 @@ from src.agent.formatter import (
     format_summary,
     format_agent_step,
     format_disclaimer,
+    format_source_refs,
 )
 from src.config import TOP_K, RERANK_ENABLED
 
@@ -65,6 +66,7 @@ class MaritimeLawAgent:
 
         final_context: List[Document] = []
         final_sources: List[str] = []
+        tool_outputs: List[str] = []
 
         for tool_call in plan.tools:
             result = self._execute_tool(tool_call, output_lines, reasoning_steps)
@@ -74,10 +76,17 @@ class MaritimeLawAgent:
                         final_context.append(doc)
                         final_sources.append(doc.metadata.get("source", "unknown"))
             elif isinstance(result, str) and result.strip():
-                output_lines.append("")
-                output_lines.append(result)
-                self.memory.add_assistant(result)
-                return self._wrap_output(output_lines)
+                tool_outputs.append(result)
+
+        if tool_outputs:
+            answer = "\n\n".join(tool_outputs)
+            output_lines.append("")
+            output_lines.append(answer)
+            output_lines.append("")
+            output_lines.append(format_source_refs(final_context))
+            output_lines.append(format_disclaimer())
+            self.memory.add_assistant(answer)
+            return self._wrap_output(output_lines)
 
         if final_context:
             output_lines.append(format_agent_step("Observe", f"检索到 {len(final_context)} 条相关段落, 来自 {len(set(final_sources))} 部法律"))
@@ -117,6 +126,7 @@ class MaritimeLawAgent:
                 output_lines.append("")
                 output_lines.append(answer)
                 output_lines.append("")
+                output_lines.append(format_source_refs(final_context))
                 output_lines.append(format_disclaimer())
                 self.memory.add_assistant(answer)
                 return self._wrap_output(output_lines)

@@ -15,8 +15,9 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "deepseek/deepseek-v4-flash")
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2:7b")
 
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
-EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "onnx")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "openai")
+EMBEDDING_DIMENSIONS = int(os.getenv("EMBEDDING_DIMENSIONS", "1536"))
 
 PARENT_CHUNK_SIZE = int(os.getenv("PARENT_CHUNK_SIZE", "1024"))
 PARENT_CHUNK_OVERLAP = int(os.getenv("PARENT_CHUNK_OVERLAP", "128"))
@@ -31,7 +32,7 @@ DENSE_WEIGHT = float(os.getenv("DENSE_WEIGHT", "0.5"))
 RERANK_ENABLED = os.getenv("RERANK_ENABLED", "true").lower() == "true"
 CROSS_ENCODER_MODEL = os.getenv(
     "CROSS_ENCODER_MODEL",
-    "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "BAAI/bge-reranker-v2-m3",
 )
 HF_ENDPOINT = os.getenv("HF_ENDPOINT", "https://hf-mirror.com")
 

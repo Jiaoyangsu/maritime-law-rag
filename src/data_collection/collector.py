@@ -42,13 +42,43 @@ def fetch_pdf_law(url: str, output_path: Path) -> str:
     resp = requests.get(url, headers=HEADERS, timeout=60)
     resp.raise_for_status()
     output_path.write_bytes(resp.content)
+    return parse_pdf_file(output_path)
 
-    doc = fitz.open(output_path)
+
+def parse_pdf_file(pdf_path: Path) -> str:
+    """Extract text from PDF using PyMuPDF, with optional OCR fallback."""
+    doc = fitz.open(pdf_path)
     text = ""
     for page in doc:
         text += page.get_text()
     doc.close()
-    return text.strip()
+    text = text.strip()
+    if text:
+        return text
+    return _ocr_pdf(pdf_path)
+
+
+def _ocr_pdf(pdf_path: Path) -> str:
+    """OCR fallback for scanned PDFs. Requires tesseract-ocr + pytesseract."""
+    try:
+        import pytesseract
+        from PIL import Image
+        import io
+        doc = fitz.open(pdf_path)
+        texts = []
+        for page_num in range(len(doc)):
+            page = doc.load_page(page_num)
+            pix = page.get_pixmap()
+            img = Image.open(io.BytesIO(pix.tobytes("png")))
+            texts.append(pytesseract.image_to_string(img, lang="chi_sim+eng"))
+        doc.close()
+        return "\n".join(texts).strip()
+    except ImportError:
+        print(f"[collector] pytesseract not installed; cannot OCR {pdf_path.name}")
+        return ""
+    except Exception as e:
+        print(f"[collector] OCR failed for {pdf_path.name}: {e}")
+        return ""
 
 
 def collect_maritime_code():

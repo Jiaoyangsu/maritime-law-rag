@@ -11,7 +11,7 @@ os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.agent.agent import MaritimeLawAgent
-from src.agent.citation import extract_citations
+from src.agent.citation import extract_citations, LAW_ALIASES
 from src.agent.memory import get_memory
 from src.config import EVAL_DIR, OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL
 from langchain.schema import HumanMessage
@@ -74,28 +74,6 @@ def judge_answer(query: str, answer: str, llm, sys_msg) -> dict:
     return {"relevancy": 0, "accuracy": 0, "completeness": 0, "reason": "judge failed"}
 
 
-EVAL_LAW_ALIASES = {
-    "SOLAS": "IMO Convention - SOLAS 详细",
-    "SOLAS公约": "IMO Convention - SOLAS 详细",
-    "国际海上人命安全公约": "IMO Convention - SOLAS 详细",
-    "MARPOL": "IMO Convention - MARPOL 详细",
-    "MARPOL公约": "IMO Convention - MARPOL 详细",
-    "国际防止船舶造成污染公约": "IMO Convention - MARPOL 详细",
-    "防止船舶造成污染": "IMO Convention - MARPOL 详细",
-    "STCW": "IMO Convention - STCW 详细",
-    "STCW公约": "IMO Convention - STCW 详细",
-    "海员培训、发证和值班标准国际公约": "IMO Convention - STCW 详细",
-    "ISM Code": "ISM Code (国际安全管理规则)",
-    "国际安全管理规则": "ISM Code (国际安全管理规则)",
-    "国际安全管理规则（ISM Code）": "ISM Code (国际安全管理规则)",
-    "MLC": "MLC 2006 (海事劳工公约)",
-    "MLC 2006": "MLC 2006 (海事劳工公约)",
-    "海事劳工公约": "MLC 2006 (海事劳工公约)",
-    "中华人民共和国海商法": "海商法",
-    "海商法": "海商法",
-}
-
-
 def check_citations(answer: str, expected_sources: list) -> dict:
     citations = extract_citations(answer)
     found_sources = set()
@@ -107,7 +85,7 @@ def check_citations(answer: str, expected_sources: list) -> dict:
             if any(p in cit_text for p in parts):
                 found_sources.add(src)
                 continue
-            for alias, target in EVAL_LAW_ALIASES.items():
+            for alias, target in LAW_ALIASES.items():
                 if target == src and alias in cit_text:
                     found_sources.add(src)
                     break
